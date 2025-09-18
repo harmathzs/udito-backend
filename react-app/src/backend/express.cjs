@@ -100,6 +100,30 @@ app.post('/udito/:id', (req, res)=>{
     res.status(201).json(responseBody)
 })
 
+app.patch('/udito/:id', (req, res)=>{
+    const data = fs.readFileSync('uditok.txt')
+    const responseBodyArr = uditoDataRead(data)
+    console.log('responseBodyArr before', responseBodyArr)
+    console.log('params', req.params)
+    const id = +req.params.id
+    console.log('id', id)
+
+    const foundIndex = responseBodyArr.findIndex(udito => +udito.id == +id)
+    console.log('foundIndex', foundIndex)   
+    if (foundIndex < 0) res.status(400).json({error: 'id not found'})  
+    else {
+        console.log('req.body', req.body)
+        const responseBody = {id, ...req.body}
+        console.log('responseBody', responseBody)
+
+        responseBodyArr.splice(foundIndex, 1, responseBody)
+        console.log('responseBodyArr after splice', responseBodyArr)
+    }
+
+    // TODO - respond actual
+    res.status(200).json(responseBodyArr)
+})
+
 app.delete('/udito/:id', (req, res)=>{
     console.log('params', req.params)
     // req.body json: {"nev":"Sprite","liter":1,"bubis-e":true}

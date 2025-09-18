@@ -118,6 +118,23 @@ app.patch('/udito/:id', (req, res)=>{
 
         responseBodyArr.splice(foundIndex, 1, responseBody)
         console.log('responseBodyArr after splice', responseBodyArr)
+        /*
+        const newFileLine = `${req.params.id};${req.body.nev};${req.body.liter};${req.body["bubis-e"]}`
+        try {
+            fs.appendFileSync('uditok.txt', newFileLine + "\n")
+        } catch(e) {
+            res.status(500).json({fileError: e})
+        }    
+            */
+        
+        let fileLines = ""
+        responseBodyArr.forEach(udito => {
+            const newFileLine = `${udito.id};${udito.nev};${udito.liter};${udito["bubis-e"]}\n`
+            fileLines += newFileLine
+        });
+        //console.log(fileLines)
+
+        fs.writeFileSync('uditok.txt', fileLines)
     }
 
     // TODO - respond actual
